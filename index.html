@@ -79,10 +79,31 @@
         </section>
         <section id="footer">
             <div>
-                <form action="/upload" method="POST" enctype="multipart/form-data">
-                    <input type="file" name="file">
-                    <input type="submit" value="Upload">
-                </form>
+              <?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Check if the file was uploaded without errors
+    if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+        $targetDir = 'uploads/'; // Specify the directory where you want to save the uploaded files
+        $targetFile = $targetDir . basename($_FILES['file']['name']);
+        
+        // Move the temporary uploaded file to the desired location
+        if (move_uploaded_file($_FILES['file']['tmp_name'], $targetFile)) {
+            echo 'File uploaded successfully.';
+        } else {
+            echo 'Error uploading file.';
+        }
+    } else {
+        echo 'Error: ' . $_FILES['file']['error'];
+    }
+}
+?>
+
+<!-- HTML form to allow file upload -->
+<form method="POST" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <input type="submit" value="Upload">
+</form>
+
 
             </div>
             <div id="links">
